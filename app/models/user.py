@@ -3,16 +3,17 @@ from werkzeug.security import check_password_hash
 from models import db
 
 class User(db.Model):
-    __tablename__ = 'user'
+    __tablename__ = 'users'
 
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(120), nullable=False)
 
-    def __init__(self, username, email):
-        self.username = username
+    def __init__(self, email, password, username=None):
         self.email = email
+        self.set_password(password)
+        self.username = username
 
     def __repr__(self):
         return '<User {}> {}'.format(self.id, self.username)
@@ -25,6 +26,9 @@ class User(db.Model):
 
     def is_anonymous(self):
         return False
+
+    def get_id():
+        return self.id
 
     def set_password(self, password):
         self.password = generate_password_hash(password)
