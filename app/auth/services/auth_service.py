@@ -5,7 +5,6 @@ from sqlalchemy.exc import IntegrityError
 
 from flask_login import login_user
 
-from auth.forms.signup import SignupForm
 
 class AuthService(object):
 

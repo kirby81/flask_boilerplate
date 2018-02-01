@@ -1,5 +1,6 @@
 {
     "python.pythonPath": "/home/ellie_e/.virtualenvs/flask_boiler/bin/python",
+    "python.linting.flake8Enabled": true,
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,

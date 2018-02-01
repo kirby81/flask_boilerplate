@@ -4,6 +4,7 @@ from models import db
 
 from models.queries.user_query import UserQuery
 
+
 class User(db.Model):
     __tablename__ = 'users'
 

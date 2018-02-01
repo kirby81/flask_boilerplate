@@ -4,10 +4,6 @@ from flask import request
 from flask import redirect
 from flask import url_for
 
-from models import db
-from models.user import User
-
-from flask_login import login_user
 from flask_login import current_user
 
 from auth.forms.signup import SignupForm
@@ -15,6 +11,7 @@ from auth.forms.login import LoginForm
 from auth.services.auth_service import AuthService
 
 auth = Blueprint('auth', __name__, template_folder='templates')
+
 
 @auth.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -29,6 +26,7 @@ def signup():
     if current_user.is_authenticated():
         return redirect(url_for('home'))
     return render_template('signup.html', form=form)
+
 
 @auth.route('/login', methods=['GET', 'POST'])
 def login():
