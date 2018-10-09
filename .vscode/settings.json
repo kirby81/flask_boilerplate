@@ -1,6 +1,8 @@
 {
-    "python.pythonPath": "/home/ellie_e/.virtualenvs/flask_boiler/bin/python",
+    "python.pythonPath": "${workspaceRoot}/venv/bin/python",
+    "python.linting.flake8Path": "${workspaceRoot}/venv/bin/flake8",
     "python.linting.flake8Enabled": true,
+    "python.linting.pylintEnabled": false,
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
