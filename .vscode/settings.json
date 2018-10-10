@@ -1,6 +1,10 @@
 {
     "python.linting.flake8Enabled": true,
     "python.linting.pylintEnabled": false,
+    "files.trimTrailingWhitespace": true,
+    "editor.rulers": [
+        120
+    ],
     "files.exclude": {
         "**/.git": true,
         "**/.svn": true,
@@ -9,5 +13,5 @@
         "**/.DS_Store": true,
         "**/__pycache__/": true
     },
-    "python.pythonPath": "E:\\Programmes\\python\\python3\\python.exe"
+    "python.pythonPath": "E:\\Envs\\flask_boilerplate\\Scripts\\Python.exe"
 }
