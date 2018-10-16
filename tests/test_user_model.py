@@ -21,6 +21,22 @@ class UserModelTestCase(unittest.TestCase):
         self.assertFalse(u.verify_password('bar'))
 
     def test_password_salts_are_random(self):
-        u = User(password='foo')
+        u1 = User(password='foo')
         u2 = User(password='bar')
-        self.assertTrue(u.password_hash != u2.password_hash)
+        self.assertTrue(u1.password_hash != u2.password_hash)
+
+    def test_valid_confirmation_token(self):
+        u = User(password='foo', id=1)
+        token = u.generate_confirmation_token()
+        self.assertTrue(u.confirm(token))
+
+    def test_expired_confirmation_token(self):
+        u = User(password='foo')
+        token = u.generate_confirmation_token(expiration=-1)
+        self.assertFalse(u.confirm(token))
+
+    def test_confirmation_token_by_other_user(self):
+        u1 = User(password='foo', id=1)
+        u2 = User(password='bar', id=2)
+        token = u1.generate_confirmation_token()
+        self.assertFalse(u2.confirm(token))
