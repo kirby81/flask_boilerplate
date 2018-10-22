@@ -46,6 +46,11 @@ class User (UserMixin, db.Model):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'confirm': self.id}).decode('utf-8')
 
+    def generate_reset_token(self, expiration=3600):
+        """Generate a reset password token"""
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'reset': self.id}).decode('utf-8')
+
     def confirm(self, token):
         """Confirm a user mail token"""
         s = Serializer(current_app.config['SECRET_KEY'])
@@ -57,6 +62,21 @@ class User (UserMixin, db.Model):
             return False
         self.confirmed = True
         db.session.add(self)
+        return True
+
+    @staticmethod
+    def reset_password(token, password):
+        """Reset user's password"""
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except BadSignature:
+            return False
+        user = User.query.get(data.get('reset'))
+        if user is None:
+            return False
+        user.password = password
+        db.session.add(user)
         return True
 
 
