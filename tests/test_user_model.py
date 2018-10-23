@@ -69,3 +69,15 @@ class UserModelTestCase(unittest.TestCase):
         token = u.generate_reset_token()
         self.assertFalse(User.reset_password(token + 'a', 'bar'))
         self.assertTrue(u.verify_password('foo'))
+
+    def test_valid_change_email(self):
+        u = User(email='foo@test.com', password='foo')
+        token = u.generate_email_token('bar@test.com')
+        self.assertTrue(u.change_email(token))
+        self.assertEqual(u.email, 'bar@test.com')
+
+    def test_invalid_change_email(self):
+        u = User(email='foo@test.com', password='foo')
+        token = u.generate_email_token('bar@test.com')
+        self.assertFalse(u.change_email(token + 'a'))
+        self.assertEqual(u.email, 'foo@test.com')

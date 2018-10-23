@@ -51,6 +51,11 @@ class User (UserMixin, db.Model):
         s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
         return s.dumps({'reset': self.id}).decode('utf-8')
 
+    def generate_email_token(self, new_email, expiration=3600):
+        """Generate a change email token"""
+        s = Serializer(current_app.config['SECRET_KEY'], expires_in=expiration)
+        return s.dumps({'change_email': self.id, 'new_email': new_email}).decode('utf-8')
+
     def confirm(self, token):
         """Confirm a user mail token"""
         s = Serializer(current_app.config['SECRET_KEY'])
@@ -61,6 +66,21 @@ class User (UserMixin, db.Model):
         if data.get('confirm') != self.id:
             return False
         self.confirmed = True
+        db.session.add(self)
+        return True
+
+    def change_email(self, token):
+        """Change the user email with an email token"""
+        s = Serializer(current_app.config['SECRET_KEY'])
+        try:
+            data = s.loads(token.encode('utf-8'))
+        except BadSignature:
+            return False
+        if data.get('change_email') != self.id:
+            return False
+        if data.get('new_email') is None or self.query.filter_by(email=data.get('new_email')).first() is not None:
+            return False
+        self.email = data.get('new_email')
         db.session.add(self)
         return True
 

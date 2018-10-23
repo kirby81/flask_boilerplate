@@ -4,7 +4,8 @@ from . import auth
 from .. import db
 from ..models import User
 from ..email import send_email
-from .forms import LoginForm, RegistrationForm, ChangePasswordForm, ResetPasswordRequestForm, ResetPasswordForm
+from .forms import LoginForm, RegistrationForm, ChangePasswordForm, ResetPasswordRequestForm,\
+    ResetPasswordForm, ChangeEmailForm
 
 
 @auth.route('/register', methods=['GET', 'POST'])
@@ -132,6 +133,31 @@ def reset_password(token):
         else:
             return redirect(url_for('main.index'))
     return render_template('auth/reset_password.html', form=form)
+
+
+@auth.route('/change-email', methods=['GET', 'POST'])
+@login_required
+def change_email_request():
+    """Resquest to change user's email"""
+    form = ChangeEmailForm()
+    if form.validate_on_submit():
+        token = current_user.generate_email_token(form.new_email.data)
+        send_email(form.new_email.data, 'New email address', 'auth/email/change_email', user=current_user, token=token)
+        flash('An email with instructions to change your email has been sent to your new email address.')
+        return redirect(url_for('main.index'))
+    return render_template('auth/change_email.html', form=form)
+
+
+@auth.route('/change-email/<token>')
+@login_required
+def change_email(token):
+    """Change the user's email"""
+    if current_user.change_email(token):
+        db.session.commit()
+        flash('Your email has been updated')
+    else:
+        flash('Invalid request')
+    return redirect(url_for('main.index'))
 
 
 @auth.before_app_request
