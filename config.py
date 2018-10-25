@@ -12,6 +12,7 @@ class Config:
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     FLASK_MAIL_SUBJECT_PREFIX = '[FLASK_BOILERPLATE] '
     FLASK_MAIL_SENDER = 'kirby.test@outlook.fr'
+    FLASK_ADMIN = os.environ.get('FLASK_ADMIN')
 
     @staticmethod
     def init_app(app):
